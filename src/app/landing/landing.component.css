@@ -1,0 +1,133 @@
+.hero__section {
+  height: 80vh; 
+  background-color: var(--bs-gray-400); 
+  overflow: hidden;
+  position: relative;
+}
+
+.hero__image{
+  height: 100%; 
+  object-fit: center;
+  position: relative;
+}
+
+.hero__links {
+  position: sticky;
+  top: 0;
+  bottom: 10px;
+  left: calc(50% - 30%);
+  width: 60%;
+  min-width: 430px;
+  background-color: hsla(214, 74%, 47%, 0.99);
+  z-index: 50;
+  
+}
+
+.menu__list {
+  list-style-type: none;
+  margin-bottom: 0px;
+  padding: 0px;
+  justify-content: space-around;
+}
+
+.menu__list li {
+  margin-bottom: 0px;
+  padding: 1.2em;
+}
+
+.menu__list li a {
+  text-decoration: none;
+  color: white;
+}
+
+.about__section {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-auto-flow: column;
+  padding-top: 2em;
+  padding-bottom: 2em;
+}
+
+.about__box {
+  grid-column: 1 / 3;
+  grid-row: 1;
+}
+
+.head__sidebar, .vicehead__sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  grid-row: 2;
+}
+
+.teacher__image {
+  width: 150px;
+}
+
+.news__section {
+  background-color: antiquewhite;
+  overflow-x: scroll;  
+}
+
+.news__tabs {
+  grid-template-columns: auto auto auto auto auto auto;
+  grid-template-rows: 1fr;
+  column-gap: 20px;
+  row-gap: 20px;
+}
+
+.news__card {
+  background-color:mediumseagreen;
+  border-radius: 10px;
+  min-width: 240px;
+}
+
+.news__image {
+  width: 100%;
+  border-radius: 5px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.footer__heading {
+  font-size:1.4em; 
+  color: white
+}
+
+.footer__list {
+  color: white;
+}
+
+.footer__list a {
+  color: white;
+  text-decoration: none;
+}
+
+@media (min-width:830px) {
+  .hero__image {
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .about__section {
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  .about__box {
+    grid-column: 2;
+  }
+
+  .head__sidebar, .vicehead__sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    grid-row: 1;
+  }
+
+}

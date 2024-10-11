@@ -1,0 +1,21 @@
+.parent__login__section {
+  grid-template-columns: 1fr 1.4fr;
+  align-items: center;
+}
+
+.form__box {
+  grid-column: 1;
+}
+
+form span {
+  margin-bottom: 10px;
+}
+
+.image__container {
+  grid-column: 2;
+}
+
+.parent__login__banner {
+  object-fit: cover;
+  width: 100%;
+}

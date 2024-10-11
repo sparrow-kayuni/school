@@ -1,0 +1,17 @@
+.teacher__login__section {
+  grid-template-columns: 1fr 1.4fr;
+  align-items: center;
+}
+
+.form__box {
+  grid-column: 1;
+}
+
+.image__container {
+  grid-column: 2;
+}
+
+.teacher__login__banner {
+  object-fit: cover;
+  width: 100%;
+}
