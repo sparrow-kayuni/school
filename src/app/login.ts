@@ -2,15 +2,15 @@ import { Parent } from "./parent"
 import { Teacher } from "./teacher"
 
 export interface TeacherLogin {
-  id : string,
-  teacher: Teacher,
+  sessionKey : string,
+  teacherId: number,
   time: Date,
   loggedOut: boolean,
 }
 
 export interface ParentLogin {
   id : string,
-  parent: Parent,
+  parentId: number,
   time: Date,
   loggedOut: boolean,
 }

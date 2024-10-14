@@ -1,10 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ReactiveFormsModule, FormGroup, FormControl} from '@angular/forms';
 import {Router, RouterModule} from '@angular/router';
 import { FacultyService } from '../faculty.service';
 import { AuthService } from '../auth.service';
+import { AuthMessage } from '../auth-message';
 import { TeacherLogin } from '../login';
+import { map, Observable, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-teacher-login',
@@ -33,7 +35,7 @@ import { TeacherLogin } from '../login';
   `,
   styleUrl: './teacher-login.component.css'
 })
-export class TeacherLoginComponent {
+export class TeacherLoginComponent implements OnInit, OnDestroy {
   
   loginGroup = new FormGroup({
     email: new FormControl(''),
@@ -42,13 +44,20 @@ export class TeacherLoginComponent {
   
   facultyService : FacultyService = inject(FacultyService);
   authService: AuthService = inject(AuthService);
-  router : Router = inject(Router);    
+  router : Router = inject(Router); 
 
   emailMessage : string = '';
   passwordMessage : string = '';
 
+  ngOnInit(): void {
+  }
 
-  validateLogin() : boolean {
+  ngOnDestroy(): void {
+    console.debug("Teacher login component destroyed");
+  }
+
+  validateLogin(){
+
     let emailValid : boolean = true;
     let passwordValid : boolean = true;
     
@@ -77,41 +86,57 @@ export class TeacherLoginComponent {
         passwordValid = false;
       }
     }
+
+    let verificationHttp : Observable<AuthMessage> = this.authService.verifyLogin(email, password);
     
-    if(passwordValid) {
-      this.passwordMessage = '';
-    }
-
-    if(emailValid) {
-      this.emailMessage = '';
-    }
+    verificationHttp.pipe(
+      map(message => {
+        
+        if(!message.emailExists) {
+          this.emailMessage = message.message;
+          emailValid = false;
+        }
     
-    if(emailValid && passwordValid) {
-      const teacher = this.facultyService.getTeacherByEmail(email);
-      if (!teacher) {
-        this.emailMessage = `The email ${email} doesn't exist`;
-        return false;
+        if(!message.passwordValid) {
+          this.passwordMessage = message.message;
+          passwordValid = false
+        }
+
+        return message
+        
+      }),
+      map(message => {
+        console.debug(`Message: ${message.message}\nEmail: ${message.emailExists}\nPassword: ${message.passwordValid}`)
+        
+        if(passwordValid) {
+          this.passwordMessage = '';
+        }
+    
+        if(emailValid) {
+          this.emailMessage = '';
+        }
+
+        return (emailValid && passwordValid);
+      })
+    ).subscribe({
+      next: (validEntries:boolean) => {
+        if (validEntries){
+          this.passwordMessage = '';
+          this.emailMessage = '';
+
+          this.authService.loginTeacher(email, password).pipe(
+            map(res => {
+              console.debug(`Session: ${res.sessionKey}\nTeacher ID: ${res.teacherId}`); 
+              if (res) {
+                this.router.navigate(['/teachers', res.sessionKey]);
+              }
+            })
+          ).subscribe();
+        }
       }
-
-      const passwordCorrect = this.facultyService.verifyPassword(teacher, password);
-      if (!passwordCorrect) {
-        this.passwordMessage = `The password given is incorrect`;
-        return false;
-      }
-
-      this.passwordMessage = '';
-      this.emailMessage = '';
-
-      const login : TeacherLogin | undefined = this.authService.loginTeacher(teacher);
-      
-      if (!login) {
-        return false;
-      }
-      
-      this.router.navigate(['/teachers', login.id])
-    }      
-
-    return true;
-
+    });
   }
+  
+
 }
+

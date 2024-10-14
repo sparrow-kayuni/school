@@ -1,92 +1,90 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {TeacherLogin,ParentLogin} from './login'
 import { Teacher } from './teacher';
 import { Parent } from './parent';
 import crypto from 'crypto-js';
 import {v4 as uuid} from 'uuid';
+import { HttpClient } from '@angular/common/http';
+import { catchError, Observable } from 'rxjs';
+import { AuthMessage } from './auth-message';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  
+  http : HttpClient = inject(HttpClient);
+  authUrl : string = "http://localhost:5000/auth"
+
+  verifyPassword(teacher: Promise<Teacher | undefined>, password: string) {
+    throw new Error('Method not implemented.');
+  }
+
+  fetchAuthorization(seesionId:string) {
+
+  }
+
   teacherLogins : TeacherLogin[] = [];
   parentLogins : ParentLogin[] = [];
-  
-  loginTeacher(teacher : Teacher) : TeacherLogin | undefined{
 
-    var existingLogin = this.teacherLogins.find((login) => login.teacher == teacher && 
-    !login.loggedOut && (new Date().getHours() - login.time.getHours()) < 20)
-
-    if (existingLogin) {
-      return existingLogin;
-    }
-
-    const login : TeacherLogin = {
-      id: uuid(),
-      teacher: teacher,
-      time: new Date(),
-      loggedOut: false,
-    }
-
-    this.teacherLogins.push(login);
-
-    return login;
+  defaultTeacher : Teacher = {
+    teacherNo: 0,
+    fullName: 'Default Teacher',
+    lastName: 'Teacher',
+    title: 'Mr',
+    classId: 0,
+    gender: 'm',
+    email: 'email@school.com',
+    phone: '',
+    nextOfKinPhone: '',
+    stringPath: '',
+    profileImg: '',
+    password: 'defaultPassword1234',
+    maritalStatus: '',
+    position: '',
+    role: '',
+    nrcNo: ''
   }
 
-  loginParent(parent : Parent) : ParentLogin | undefined{
+  sessionKey:string = '';
 
-    var existingLogin = this.parentLogins.find((login) => login.parent == parent && 
-    !login.loggedOut && (new Date().getHours() - login.time.getHours()) < 20)
+  verifyLogin(email:string, password:string) : Observable<AuthMessage> {
+    const data : FormData = new FormData()
+    data.append('email', email);
+    data.append('password', password);
 
-    if (existingLogin) {
-      return existingLogin;
-    }
+    var authMessage : any = {};
 
-    const login : ParentLogin = {
-      id: uuid(),
-      parent: parent,
-      time: new Date(),
-      loggedOut: false,
-    }
-
-    this.parentLogins.push(login);
-
-    return login;
-  }
-
-  verifyTeacherLogin(id:string) : boolean {
-    const login = this.teacherLogins.find((login) => login.id === id);
+    return this.http.post<AuthMessage>(`${this.authUrl}/verify-login`, data)
     
-    if(!login) {
-      return false;
-    }
-
-    if (login.loggedOut) {
-      return false;
-    }
+    // return authMessage;
+  }
   
-    if(new Date().getHours() - login.time.getHours() > 20) {
-      // login again
-      return false;
-    }
+  loginTeacher(email : string, password:string) : Observable<TeacherLogin>{
+    const data : FormData = new FormData()
+    data.append('email', email);
+    data.append('password', password);
+    
+    var session : any = {}
 
-    return true;
+    return this.http.post<TeacherLogin>(`${this.authUrl}/generate-login`, data)
+    
   }
 
-  verifyParentLogin(id:string) : boolean {
-    const login = this.parentLogins.find((login) => login.id === id);
-    
-    if(!login) {
-      return false;
-    }
-  
-    if(new Date().getHours() - login.time.getHours() > 3) {
-      // login again
-      return false;
-    }
+  logoutTeacher(sessionKey:string) : Observable<any>{
+    return this.http.get( `${this.authUrl}/logout-teacher`, {
+      params: {
+        sessionKey: sessionKey
+      }
+    });
+  }
 
-    return true;
+  getTeacherFromSessionKey(sessionKey:string) : Observable<Teacher> {
+    return this.http.get<Teacher>(`${this.authUrl}/verify-session-key`, {
+      params: {
+        sessionKey: sessionKey
+      }
+    });
   }
 
 }

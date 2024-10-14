@@ -9,7 +9,7 @@ import { LandingComponent } from './landing/landing.component';
   imports: [CommonModule, RouterOutlet, RouterModule, RouterLink, LandingComponent],
   template: `
   <main>
-    <nav class="nav__bar d-flex px-2 py-2">
+    <nav class="nav__bar d-flex px-2 py-1">
       <ul class="nav__menu">
         <li class="nav__item">
           <a routerLink="" style="font-weight: bold; font-size:1em">Default Primary School</a>

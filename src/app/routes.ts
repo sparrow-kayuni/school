@@ -9,8 +9,8 @@ export const routeConfig : Routes = [
   {path:'', component:LandingComponent},
   {path:'parents', redirectTo:'auth/parent', pathMatch: 'full'},
   {path:'teachers', redirectTo:'auth/teachers', pathMatch: 'full'},
-  {path:'parents/:string', component: ParentLoginComponent},
-  {path:'teachers/:string', component: TeachersComponent},
+  {path:'parents/:link', component: ParentLoginComponent},
+  {path:'teachers/:link', component: TeachersComponent},
   {path:'auth/teachers', component:TeacherLoginComponent},
   {path:'auth/parent', component: ParentLoginComponent},
   {path:'admissions', component:AdmissionComponent}
