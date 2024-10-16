@@ -4,30 +4,18 @@ import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { Teacher } from '../teacher';
 import { FacultyService } from '../faculty.service';
 import { AuthService } from '../auth.service';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable } from 'rxjs';
+import { SessionAuthMessage } from '../auth-message';
+import { DashboardNavbarComponent } from '../dashboard-navbar/dashboard-navbar.component';
 
 
 @Component({
   selector: 'app-teachers',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, DashboardNavbarComponent],
   template: `
+  <dashboard-navbar [teacher]="this.teacher" [sessionKey]="this.sessionKey"></dashboard-navbar>
   <section class="d-grid">
-   <aside class="pt-2 d-grid teacher__navigation pb-3 px-2">
-      <ul class="d-flex nav__submenu__1 px-2" >
-        <li class="px-2" *ngFor="let link of ['Calendar', 'Lessons', 'Tests', 'Students']">
-          <a href="#" style="color: white; text-decoration: none;">{{ link }}</a>
-        </li>
-      </ul>
-      <ul class="d-flex nav__submenu__2 px-2" >
-        <li class="px-2" >
-          <a href="#" style="color: white; text-decoration: none;">Profile</a>
-        </li>
-        <li class="px-2" >
-          <button class="logout__button" (click)="logoutTeacher()">Logout</button>
-        </li>
-      </ul>
-    </aside>
     <div class="p-4">
       <h1>{{ teacher.fullName }}</h1>
       <h2>{{ teacher.position }}</h2>
@@ -40,7 +28,7 @@ import { map, Observable } from 'rxjs';
 export class TeachersComponent implements OnInit, OnDestroy {
 
   teacher : Teacher;
-  teacherService : FacultyService = inject(FacultyService);
+  facultyService : FacultyService = inject(FacultyService);
   authService: AuthService = inject(AuthService);
   route : ActivatedRoute = inject(ActivatedRoute);
   router : Router = inject(Router);
@@ -52,18 +40,34 @@ export class TeachersComponent implements OnInit, OnDestroy {
   }
   
   ngOnInit(): void {
-    const getTeacherHttp : Observable<Teacher> = this.authService.getTeacherFromSessionKey(this.sessionKey);
-
-    getTeacherHttp.pipe(
+    const verifySessionHttp : Observable<SessionAuthMessage> = this.authService.verifySessionKey(this.sessionKey);
+    verifySessionHttp.pipe(
       map(res => {
-        this.teacher = res;
+        if (!res.sessionExists || res.sessionExpired) {
+          this.router.navigate(['/auth/teachers'], { 
+            queryParams: { message: `${res.message.replaceAll(' ', '+')}`} 
+          });
+        }
         return res
-      }),
-      map(res => {
-        console.debug(`Teacher is ${this.teacher.fullName}`);
-        console.debug(`Logins have been ${this.authService.teacherLogins}`)
       })
-    ).subscribe();
+    ).subscribe({
+      next: res => {
+        if (!res.sessionExpired && res.sessionExists){
+          const getTeacherHttp = this.facultyService.getTeacherBySessionKey(this.sessionKey);
+          getTeacherHttp.pipe(
+            map(teacher => {
+              this.teacher = teacher;
+              return teacher;
+            }),
+            map(res => {
+              console.debug(`Teacher is ${this.teacher.fullName}`);
+              console.debug(`Logins have been ${this.authService.teacherLogins}`)
+            })
+          ).subscribe()
+        }
+        
+      }
+    });
   }
 
   logoutTeacher() {

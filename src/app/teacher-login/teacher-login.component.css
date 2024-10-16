@@ -15,3 +15,14 @@
   object-fit: cover;
   width: 100%;
 }
+
+.flash__message {
+  display: block;
+  position: fixed;
+  z-index: 1000;
+  border-radius: 3px;
+  border: solid 1px indianred;
+  color: black;
+  bottom: 20px;
+  left: 20px;
+}

@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {RouterLink} from '@angular/router';
+import { LandingNavbarComponent } from '../landing-navbar/landing-navbar.component';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, LandingNavbarComponent],
   template: `
+  <landing-navbar></landing-navbar>
   <section class="hero__section">
     <img src="assets/school_outdoors.webp" class="hero__image"/>
     <div class="d-block hero__links">

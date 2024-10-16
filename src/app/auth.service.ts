@@ -6,7 +6,7 @@ import crypto from 'crypto-js';
 import {v4 as uuid} from 'uuid';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable } from 'rxjs';
-import { AuthMessage } from './auth-message';
+import { LoginAuthMessage, SessionAuthMessage } from './auth-message';
 
 
 @Injectable({
@@ -48,16 +48,15 @@ export class AuthService {
 
   sessionKey:string = '';
 
-  verifyLogin(email:string, password:string) : Observable<AuthMessage> {
+  verifyLogin(email:string, password:string) : Observable<LoginAuthMessage> {
     const data : FormData = new FormData()
     data.append('email', email);
     data.append('password', password);
 
     var authMessage : any = {};
 
-    return this.http.post<AuthMessage>(`${this.authUrl}/verify-login`, data)
+    return this.http.post<LoginAuthMessage>(`${this.authUrl}/verify-login`, data)
     
-    // return authMessage;
   }
   
   loginTeacher(email : string, password:string) : Observable<TeacherLogin>{
@@ -79,8 +78,8 @@ export class AuthService {
     });
   }
 
-  getTeacherFromSessionKey(sessionKey:string) : Observable<Teacher> {
-    return this.http.get<Teacher>(`${this.authUrl}/verify-session-key`, {
+  verifySessionKey(sessionKey:string) : Observable<SessionAuthMessage> {
+    return this.http.get<SessionAuthMessage>(`${this.authUrl}/verify-session-key`, {
       params: {
         sessionKey: sessionKey
       }

@@ -1,18 +1,20 @@
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ReactiveFormsModule, FormGroup, FormControl} from '@angular/forms';
-import {Router, RouterModule} from '@angular/router';
+import {ActivatedRoute, Router, RouterModule} from '@angular/router';
 import { FacultyService } from '../faculty.service';
 import { AuthService } from '../auth.service';
-import { AuthMessage } from '../auth-message';
+import { LoginAuthMessage, SessionAuthMessage } from '../auth-message';
 import { TeacherLogin } from '../login';
 import { map, Observable, switchMap } from 'rxjs';
+import { LandingNavbarComponent } from '../landing-navbar/landing-navbar.component';
 
 @Component({
   selector: 'app-teacher-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, LandingNavbarComponent],
   template: `
+  <landing-navbar></landing-navbar>
   <section class="teacher__login__section d-grid">
     <div class="form__box px-4">
       <div class="mb-4">
@@ -31,6 +33,11 @@ import { map, Observable, switchMap } from 'rxjs';
     <div class="image__container">
       <img src="/assets/school_outdoors.webp" class="teacher__login__banner" />
     </div>
+    @if(this.flashMessage != '') {
+      <div class="flash__message p-3">
+        <span>{{ this.flashMessage }}</span>
+      </div>
+    }
   </section>
   `,
   styleUrl: './teacher-login.component.css'
@@ -45,15 +52,28 @@ export class TeacherLoginComponent implements OnInit, OnDestroy {
   facultyService : FacultyService = inject(FacultyService);
   authService: AuthService = inject(AuthService);
   router : Router = inject(Router); 
+  route : ActivatedRoute = inject(ActivatedRoute);
 
   emailMessage : string = '';
   passwordMessage : string = '';
+  flashMessage : string | null = ''
+
+  constructor() {
+    
+  }
 
   ngOnInit(): void {
+    console.debug(`Teachers componatent has been created`);
+
+    if (this.route.snapshot.params['message'] == null){
+      return;
+    }
+
+    this.flashMessage = this.route.snapshot.params['message'];
   }
 
   ngOnDestroy(): void {
-    console.debug("Teacher login component destroyed");
+  
   }
 
   validateLogin(){
@@ -87,7 +107,7 @@ export class TeacherLoginComponent implements OnInit, OnDestroy {
       }
     }
 
-    let verificationHttp : Observable<AuthMessage> = this.authService.verifyLogin(email, password);
+    let verificationHttp : Observable<LoginAuthMessage> = this.authService.verifyLogin(email, password);
     
     verificationHttp.pipe(
       map(message => {
@@ -136,7 +156,6 @@ export class TeacherLoginComponent implements OnInit, OnDestroy {
       }
     });
   }
-  
 
 }
 

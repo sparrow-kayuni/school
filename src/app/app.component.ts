@@ -1,36 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterModule } from '@angular/router';
 import { LandingComponent } from './landing/landing.component';
+import { LandingNavbarComponent } from './landing-navbar/landing-navbar.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterModule, RouterLink, LandingComponent],
+  imports: [CommonModule, RouterOutlet, RouterModule, RouterLink],
   template: `
   <main>
-    <nav class="nav__bar d-flex px-2 py-1">
-      <ul class="nav__menu">
-        <li class="nav__item">
-          <a routerLink="" style="font-weight: bold; font-size:1em">Default Primary School</a>
-        </li>
-      </ul>
-      <ul class="nav__menu">
-        <li class="nav__item">
-          <a routerLink="auth/teachers">Teacher</a>
-        </li>
-        <li class="nav__item">
-          <a routerLink="auth/parents">Parents</a>
-        </li>
-        <li class="nav__item">
-          <a routerLink="/admissions">Apply here</a>
-        </li>
-      </ul>
-    </nav>
     <router-outlet />
+  </main>
   `,  
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
+  
   title = 'school';
+
+  ngOnInit(): void {
+    console.debug(`Main App has been created`)
+  }
+  
+  ngOnDestroy(): void {
+    console.debug(`Main App has been destroyed`)
+  }
+
 }

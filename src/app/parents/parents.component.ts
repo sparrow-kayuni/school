@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-parents',
@@ -7,6 +7,9 @@ import { Component } from '@angular/core';
   templateUrl: './parents.component.html',
   styleUrl: './parents.component.css'
 })
-export class ParentsComponent {
+export class ParentsComponent implements OnInit{
+  ngOnInit(): void {
+    console.debug(`Parents componatent has been created`)
+  }
 
 }

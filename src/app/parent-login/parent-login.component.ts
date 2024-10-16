@@ -1,13 +1,15 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ReactiveFormsModule, FormGroup, FormControl} from '@angular/forms';
 import { ParentService } from '../parent.service';
+import { LandingNavbarComponent } from '../landing-navbar/landing-navbar.component';
 
 @Component({
   selector: 'app-parent-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, LandingNavbarComponent],
   template: `
+  <landing-navbar></landing-navbar>
   <section class="parent__login__section d-grid">
     <div class="form__box px-4">
       <div class="mb-4">
@@ -30,7 +32,7 @@ import { ParentService } from '../parent.service';
   `,
   styleUrl: './parent-login.component.css'
 })
-export class ParentLoginComponent {
+export class ParentLoginComponent implements OnInit {
 
   email = new FormControl('');
   password = new FormControl('');
@@ -42,6 +44,10 @@ export class ParentLoginComponent {
 
   constructor() {
     //
+  }
+  ngOnInit(): void {
+    console.debug(`Parent componatent has been created`);
+
   }
 
   validateLogin() : boolean {

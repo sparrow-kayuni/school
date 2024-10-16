@@ -1,0 +1,29 @@
+.search__bar {
+  background-color: var(--bs-gray-900);
+}
+
+.nav__bar {
+  background-color: var(--bs-gray-900);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav__menu {
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 0px;
+}
+
+.nav__item {
+  padding: 1em;
+}
+
+.nav__item a {
+  text-decoration: none;
+  color: white;
+}

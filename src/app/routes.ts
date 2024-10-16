@@ -11,7 +11,9 @@ export const routeConfig : Routes = [
   {path:'teachers', redirectTo:'auth/teachers', pathMatch: 'full'},
   {path:'parents/:link', component: ParentLoginComponent},
   {path:'teachers/:link', component: TeachersComponent},
+  {path:'teachers/:link?message=:message', component: TeachersComponent},
   {path:'auth/teachers', component:TeacherLoginComponent},
+  {path:'auth/teachers?message=:message', component:TeacherLoginComponent},
   {path:'auth/parent', component: ParentLoginComponent},
   {path:'admissions', component:AdmissionComponent}
 ]

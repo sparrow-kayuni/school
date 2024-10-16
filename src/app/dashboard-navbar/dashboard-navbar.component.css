@@ -1,0 +1,78 @@
+.header__search__bar {
+  background-color: var(--bs-gray-900);
+  grid-template-columns: 8fr 9fr 4fr;
+  align-items: center;
+}
+
+.header__menu {
+  margin: 0px !important;
+}
+
+.header__menu a {
+  color: white;
+  text-decoration: none;
+}
+
+.header__item {
+  color: white;
+}
+
+.header__item a {
+  color: white;
+  text-decoration: none;
+}
+
+.header__submenu {
+  flex-direction: row;
+  justify-content: flex-end;
+  list-style: none;
+  align-items: center;
+  margin: 0 !important;
+}
+
+.teacher__navigation {
+  background-color: var(--bs-gray-900);
+  grid-template-columns: 1.2fr 1fr;
+  column-gap: 10px;
+}
+
+.nav__menu {
+  list-style-type: none;
+}
+
+.nav__item {
+  color: white;
+}
+
+.nav__submenu__1 {
+  grid-column: 1;
+  flex-direction: row;
+  justify-content: flex-start;
+  list-style: none;
+  margin: 0 !important;
+  font-size: 0.9em;
+}
+.nav__submenu__2 {
+  grid-column: 2;
+  flex-direction: row;
+  justify-content: flex-end;
+  list-style: none;
+  margin: 0 !important;
+  align-items: center;
+}
+
+.nav__submenu__2 li {
+  font-size: 0.9em;
+  color: white;
+  padding: 0.5em 1em 0.5em 1em;
+}
+
+.logout__button {
+  background-color: transparent;
+  color: white;
+  border: 1px solid transparent;
+}
+
+.logout__button:hover{
+  cursor: pointer;
+}
