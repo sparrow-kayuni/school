@@ -1,6 +1,7 @@
 .teacher__login__section {
   grid-template-columns: 1fr 1.4fr;
   align-items: center;
+  position: relative;
 }
 
 .form__box {
@@ -16,13 +17,17 @@
   width: 100%;
 }
 
-.flash__message {
-  display: block;
-  position: fixed;
+.flash__message__error {
+  display: flex;
+  position: absolute;
   z-index: 1000;
   border-radius: 3px;
-  border: solid 1px indianred;
-  color: black;
-  bottom: 20px;
+  border: solid 1px rgb(201, 8, 8);
+  background-color: rgb(197, 66, 66);
+  color: white;
+  top: 20px;
   left: 20px;
+  width: auto;
+  min-width: 300px;
+  justify-content: space-between;
 }

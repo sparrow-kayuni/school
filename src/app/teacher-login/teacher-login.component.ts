@@ -6,7 +6,7 @@ import { FacultyService } from '../faculty.service';
 import { AuthService } from '../auth.service';
 import { LoginAuthMessage, SessionAuthMessage } from '../auth-message';
 import { TeacherLogin } from '../login';
-import { map, Observable, switchMap } from 'rxjs';
+import { map, Observable, switchMap, timeout } from 'rxjs';
 import { LandingNavbarComponent } from '../landing-navbar/landing-navbar.component';
 
 @Component({
@@ -33,9 +33,10 @@ import { LandingNavbarComponent } from '../landing-navbar/landing-navbar.compone
     <div class="image__container">
       <img src="/assets/school_outdoors.webp" class="teacher__login__banner" />
     </div>
-    @if(this.flashMessage != '') {
-      <div class="flash__message p-3">
-        <span>{{ this.flashMessage }}</span>
+    @if(this.flashMessage != '' && !this.flashMessageClosed) {
+      <div class="flash__message__error">
+        <span class="p-3">{{ this.flashMessage }}</span>
+        <span class="p-3" (click)="this.flashMessageClosed = true;" style="cursor: pointer; background-color: rgb(210, 110, 110);">x</span>
       </div>
     }
   </section>
@@ -56,20 +57,20 @@ export class TeacherLoginComponent implements OnInit, OnDestroy {
 
   emailMessage : string = '';
   passwordMessage : string = '';
-  flashMessage : string | null = ''
+  flashMessage : string | null = '';
+  flashMessageClosed : boolean = false;
 
   constructor() {
     
   }
 
   ngOnInit(): void {
-    console.debug(`Teachers componatent has been created`);
-
-    if (this.route.snapshot.params['message'] == null){
-      return;
+    console.debug(`Teachers login has been created`);
+    if(sessionStorage.getItem('message') != null){
+      this.flashMessage = sessionStorage.getItem('message');      
     }
 
-    this.flashMessage = this.route.snapshot.params['message'];
+    console.debug(this.flashMessage);
   }
 
   ngOnDestroy(): void {
@@ -148,11 +149,17 @@ export class TeacherLoginComponent implements OnInit, OnDestroy {
             map(res => {
               console.debug(`Session: ${res.sessionKey}\nTeacher ID: ${res.teacherId}`); 
               if (res) {
-                this.router.navigate(['/teachers', res.sessionKey]);
+                sessionStorage.setItem('sessionKey', res.sessionKey);
+                sessionStorage.setItem('message', 'Successfully logged in!');
+                this.router.navigate(['/teachers']);
               }
             })
           ).subscribe();
         }
+      },
+      error: (err) => {
+        this.flashMessage = 'Something went wrong!';
+        this.flashMessageClosed = false;
       }
     });
   }

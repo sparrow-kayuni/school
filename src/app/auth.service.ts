@@ -29,12 +29,12 @@ export class AuthService {
 
   defaultTeacher : Teacher = {
     teacherNo: 0,
-    fullName: 'Default Teacher',
-    lastName: 'Teacher',
+    fullName: '',
+    lastName: '',
     title: 'Mr',
     classId: 0,
     gender: 'm',
-    email: 'email@school.com',
+    email: '',
     phone: '',
     nextOfKinPhone: '',
     stringPath: '',

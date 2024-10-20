@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { RouterLink, RouterModule } from '@angular/router';
+import { Component, inject, Input } from '@angular/core';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { Teacher } from '../teacher';
+import { AuthService } from '../auth.service';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'dashboard-navbar',
@@ -10,7 +12,7 @@ import { Teacher } from '../teacher';
   template: `
   <header class="header__search__bar d-grid py-2 pb-1 px-2">
     <div class="header__menu p-4 py-2">
-      <a routerLink="/teachers/{{this.sessionKey}}" style="font-weight: bold; font-size:1em">Default Primary School</a>
+      <a routerLink="/teachers" style="font-weight: bold; font-size:1em">Default Primary School</a>
     </div>
     <form class="d-flex header__submenu px-2" >
       <input type="search" class="form-control" style="border-radius: 3px 0px 0px 3px;" placeholder="Find anything here" />
@@ -21,7 +23,7 @@ import { Teacher } from '../teacher';
         <a href="#" style="color: white; text-decoration: none;">Calendar</a>
       </li>
       <li class="px-2" >
-        <a href="#" style="color: white; text-decoration: none;">Profile</a>
+        <a routerLink="/teachers/profile" style="color: white; text-decoration: none;">Profile</a>
       </li>
       <li class="px-2" >
         <button class="logout__button" (click)="logoutTeacher()">Logout</button>
@@ -30,18 +32,14 @@ import { Teacher } from '../teacher';
   </header>
   <nav class="d-grid teacher__navigation pt-2 pb-1 px-2">
     <ul class="d-flex nav__submenu__1 px-2 py-2" >
-      <li class="px-2" *ngFor="let link of ['New Test/Exam', 'Students', 'Attendance', 'Lessons']">
-        <a href="#" style="color: white; text-decoration: none;">{{ link }}</a>
+      <li class="px-2" *ngFor="let link of this.mainLinks">
+        <a routerLink="{{ link.urlPath }}" style="color: white; text-decoration: none;">{{ link.text }}</a>
       </li>
     </ul>
     <ul class="nav__submenu__2 d-flex px-2"> 
-      <li style="color: white; font-weight: lighter;" class="px-2">Announcements</li>
-
-      @if(this.teacher.role == 'admin'){
-      <li style="color: white; font-weight: lighter;" class="px-2">Admissions</li>
-        <li style="color: white; font-weight: lighter;" class="px-2">Teachers</li>
-        <li style="color: white; font-weight: lighter;" class="px-2">Payments Fees</li>
-      }
+      <li *ngFor="let sidelink of this.sideLinks" style="font-weight: lighter;" class="px-2">
+        <a routerLink="{{ sidelink.urlPath }}" style="color: white; text-decoration: none;">{{ sidelink.text }}</a>
+      </li>
     </ul>
   </nav>`,
   styleUrl: './dashboard-navbar.component.css'
@@ -50,8 +48,47 @@ export class DashboardNavbarComponent {
 
   @Input() teacher!: Teacher;
   @Input() sessionKey!: string;
+  mainLinks : any[] = [];
+  sideLinks : any[] = [];
+
+  authService:AuthService = inject(AuthService);
+  router:Router = inject(Router);
+
+  ngOnInit() : void {
+    if(this.teacher.role === 'user') {
+      this.mainLinks = [
+        {text: 'New Test/Exam', urlPath: '/teachers/new-test'},
+        {text: 'Students', urlPath: '/teachers/students'},
+        {text: 'Tests', urlPath: '/teachers/tests'},
+        {text: 'Attendance', urlPath: '/teachers/attendance'},
+      ];
+      this.sideLinks = [
+        {text: 'Announcements', urlPath: '/announcements'},
+      ];
+    } else if(this.teacher.role === 'admin') {
+      this.mainLinks = [
+        {text: 'Applications', urlPath: '/school/applications'},
+        {text: 'Students', urlPath: '/school/students'},
+        {text: 'Teachers', urlPath: '/school/teachers'},
+        {text: 'Payments', urlPath: '/school/payments'}
+      ];
+      this.sideLinks = [
+        {text: 'Calendar', urlPath: '/school/calendar'},
+        {text: 'Announcements', urlPath: '/announcements'},
+      ]
+    }
+
+  }
   
   logoutTeacher() {
-    console.debug(`Logging out...`)
+    const logoutHttp = this.authService.logoutTeacher(this.sessionKey);
+
+    logoutHttp.pipe(
+      map((res) => {
+        if (res.message) {
+          this.router.navigate(['/']);
+        }
+      })
+    ).subscribe();
   }
 }

@@ -1,27 +1,36 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule }  from '@angular/common';
-import { RouterModule, Router, ActivatedRoute } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute, RouterOutlet } from '@angular/router';
 import { Teacher } from '../teacher';
 import { FacultyService } from '../faculty.service';
 import { AuthService } from '../auth.service';
 import { catchError, map, Observable } from 'rxjs';
 import { SessionAuthMessage } from '../auth-message';
 import { DashboardNavbarComponent } from '../dashboard-navbar/dashboard-navbar.component';
+import { TeachersDashboardComponent } from '../teachers-dashboard/teachers-dashboard.component';
 
 
 @Component({
   selector: 'app-teachers',
   standalone: true,
-  imports: [CommonModule, RouterModule, DashboardNavbarComponent],
+  imports: [CommonModule, RouterOutlet, RouterModule, DashboardNavbarComponent, TeachersDashboardComponent],
   template: `
-  <dashboard-navbar [teacher]="this.teacher" [sessionKey]="this.sessionKey"></dashboard-navbar>
+  @if(this.teacher.fullName != '') {
+    <dashboard-navbar [teacher]="this.teacher" [sessionKey]="this.sessionKey"></dashboard-navbar>
+  }
   <section class="d-grid">
-    <div class="p-4">
-      <h1>{{ teacher.fullName }}</h1>
-      <h2>{{ teacher.position }}</h2>
-    </div>
-  </section>
-   
+    @if(this.teacher.fullName != ''){
+      <router-outlet />
+    } @else {
+      <div class="p-4">Loading...</div>
+    }
+    @if(this.flashMessage != '' && !this.flashMessageClosed) {
+      <div class="flash__message__success">
+        <span class="p-3">{{ this.flashMessage }}</span>
+        <span class="p-3" (click)="this.flashMessageClosed = true;" style="cursor: pointer; background-color: #3b9733;">x</span>
+      </div>
+    }
+  </section> 
   `,
   styleUrl: './teachers.component.css'
 })
@@ -33,10 +42,12 @@ export class TeachersComponent implements OnInit, OnDestroy {
   route : ActivatedRoute = inject(ActivatedRoute);
   router : Router = inject(Router);
   sessionKey : string;
+  flashMessage : string | null = '';
+  flashMessageClosed:boolean = false;
 
   constructor() {
     this.teacher = this.authService.defaultTeacher;
-    this.sessionKey = this.route.snapshot.params['link'];
+    this.sessionKey = sessionStorage.getItem('sessionKey')!;
   }
   
   ngOnInit(): void {
@@ -44,11 +55,11 @@ export class TeachersComponent implements OnInit, OnDestroy {
     verifySessionHttp.pipe(
       map(res => {
         if (!res.sessionExists || res.sessionExpired) {
-          this.router.navigate(['/auth/teachers'], { 
-            queryParams: { message: `${res.message.replaceAll(' ', '+')}`} 
-          });
+          sessionStorage.setItem('message', res.message);
+          console.debug(`Session exists: ${res.sessionExists} \nSession expired: ${res.sessionExpired}`)
+          this.router.navigate(['/auth/teachers']);
         }
-        return res
+        return res;
       })
     ).subscribe({
       next: res => {
@@ -57,33 +68,25 @@ export class TeachersComponent implements OnInit, OnDestroy {
           getTeacherHttp.pipe(
             map(teacher => {
               this.teacher = teacher;
+              sessionStorage.setItem('teacher', JSON.stringify(this.teacher));
               return teacher;
-            }),
-            map(res => {
-              console.debug(`Teacher is ${this.teacher.fullName}`);
-              console.debug(`Logins have been ${this.authService.teacherLogins}`)
             })
-          ).subscribe()
+          ).subscribe({
+            next: res => {
+              this.flashMessage = sessionStorage.getItem('message');
+              console.debug(`Teacher is ${this.teacher.fullName}`);
+              sessionStorage.setItem('message', '');
+            }
+          })
         }
-        
+
       }
     });
   }
 
-  logoutTeacher() {
-    const logoutHttp = this.authService.logoutTeacher(this.sessionKey);
-
-    logoutHttp.pipe(
-      map((res) => {
-        if (res.message) {
-          this.router.navigate(['/']);
-        }
-      })
-    ).subscribe();
-  }
-
   ngOnDestroy(): void {
     this.teacher = this.authService.defaultTeacher;
+    console.debug(`Teacher component has been destroyed`)
   }
 
 }
