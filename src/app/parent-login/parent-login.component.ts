@@ -88,24 +88,6 @@ export class ParentLoginComponent implements OnInit {
     if(emailValid) {
       this.emailMessage = '';
     }
-    
-    // authentication
-    if(emailValid && passwordValid) {
-      const parent = this.parentService.getParentByEmail(email);
-      if (!parent) {
-        this.emailMessage = `The email ${email} doesn't exist`;
-        return false;
-      }
-
-      const passwordCorrect = this.parentService.verifyPassword(parent, password);
-      if (!passwordCorrect) {
-        this.passwordMessage = `The password given is incorrect`;
-        return false;
-      }
-
-      this.passwordMessage = '';
-      this.emailMessage = '';
-    }
 
     return true;
 

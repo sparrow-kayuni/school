@@ -1,0 +1,59 @@
+.admission__body {
+
+}
+
+.form__body {
+  width: 80%;
+  border-radius: 20px;
+  border: 1px solid var(--bs-gray-500);
+}
+
+.tab__headers {
+  background-color: #306397;
+  border-radius: 20px 20px 0px 0px;
+  border-bottom: 1px solid var(--bs-gray-500);
+}
+
+.tab__menu {
+  list-style-type: none;
+  margin: 0px;
+}
+
+.tab__item {
+  color: white;
+  margin-right: 1em;
+  cursor: pointer;
+  border-radius: 15px 15px 0px 0px;
+  transition: all ease-in 500ms;
+}
+
+.tab__item:hover {
+  background-color: rgb(135, 148, 222);
+  color: black;
+}
+
+.selected__tab {
+  background-color: burlywood;
+  color: black;
+  border-radius: 15px 15px 0px 0px;
+  margin-right: 1em;
+  cursor: pointer;
+}
+
+.tab__body {
+  padding: 1em;
+}
+
+.child__details, .parent__details {
+  height: 60vh;
+  overflow-y: scroll;
+}
+
+
+[shown] {
+  display: inherit
+}
+
+@media (min-width: 910px) {
+
+}

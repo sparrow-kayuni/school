@@ -10,3 +10,8 @@ export interface SessionAuthMessage {
   sessionExists: boolean,
   sessionExpired: boolean
 }
+
+export interface ParentContactMessage {
+  message: string,
+  parentExists: boolean
+}

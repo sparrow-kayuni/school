@@ -1,16 +1,19 @@
 import { Grade } from "./grade";
 
 export interface Pupil {
-  pupilNo: number,
+  pupilId?: string,
   firstName: string,
   lastName: string,
   gender: string,
-  dateOfBirth: Date | undefined,
+  dateOfBirth: Date,
   parentNo: number,
   homeAddress: string,
+  profilePic?: any,
   parentContact: string,
-  hasParent: boolean,
   dateJoined?: Date,
   gradeJoined?: Grade,
-  currentGrade?: Grade,
+  currentGrade: any,
+  hasSpecialNeeds: boolean,
+  specialNeed: string,
+  isAccepted: boolean
 }

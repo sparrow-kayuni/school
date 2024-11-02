@@ -20,7 +20,7 @@ import { LandingNavbarComponent } from '../landing-navbar/landing-navbar.compone
       <div class="mb-4">
         <h1>Log into teachers <br> portal</h1>
       </div>
-      <form class="form-group py-2" [formGroup]="loginGroup" (ngSubmit)="validateLogin()" style="width:64%;">
+      <form class="form-group py-2 form__group" [formGroup]="loginGroup" (ngSubmit)="validateLogin()">
         <label for="email">Email<span style="color:red;">*</span></label>
         <input required type="email" id="email" class="form-control" [formControl]="loginGroup.controls.email"/>
         <div class="" style="font-size:0.8em; color: red;">{{ this.emailMessage }}</div>
