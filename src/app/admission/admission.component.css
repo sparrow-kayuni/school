@@ -1,11 +1,9 @@
-.admission__body {
-
-}
 
 .form__body {
   width: 80%;
   border-radius: 20px;
   border: 1px solid var(--bs-gray-500);
+  margin-left: 10%;
 }
 
 .tab__headers {
@@ -44,14 +42,46 @@
   padding: 1em;
 }
 
-.child__details, .parent__details {
-  height: 60vh;
-  overflow-y: scroll;
+
+.form__input__group {
+  display: grid;
+  grid-template-columns: 0.25fr 0.75fr;
+  align-items: center;
 }
 
+.form__input__group > label {
+  grid-column: 1;
+}
+
+.form__input__group > input[type=text] {
+  grid-column: 2;
+}
+
+.form__input__address {
+  display: grid;
+  grid-template-columns: 0.25fr 0.45fr 0.1fr 0.20fr;
+  align-items: center;
+}
+
+.form__input__address > label:nth-child(3) {
+  padding-left: 1em;
+}
 
 [shown] {
   display: inherit
+}
+
+td {
+  padding: 0.5em !important;
+}
+
+tr {
+  display: grid;
+  grid-template-columns: 0.25fr 0.75fr;
+}
+
+table {
+  width: 100%;
 }
 
 @media (min-width: 910px) {

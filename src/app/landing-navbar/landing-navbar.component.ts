@@ -9,16 +9,15 @@ import { RouterLink, RouterModule } from '@angular/router';
     <nav class="nav__bar d-flex px-2 py-1">
       <ul class="nav__menu">
         <li class="nav__item">
-          <a routerLink="" style="font-weight: bold; font-size:1em">Default Primary School</a>
+          <a routerLink="/" style="font-weight: bold; font-size:1em">Default Primary School</a>
         </li>
       </ul>
       <ul class="nav__menu">
         <li class="nav__item">
-
-          <a routerLink="auth/teachers">Teacher</a>
+          <a routerLink="/auth/teachers">Teacher</a>
         </li>
         <li class="nav__item">
-          <a routerLink="auth/parent">Parents</a>
+          <a routerLink="/auth/parent">Parents</a>
         </li>
         <li class="nav__item">
           <a routerLink="/admissions">Apply here</a>

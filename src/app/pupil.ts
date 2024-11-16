@@ -9,11 +9,12 @@ export interface Pupil {
   parentNo: number,
   homeAddress: string,
   profilePic?: any,
-  parentContact: string,
+  parentNrc: string,
   dateJoined?: Date,
   gradeJoined?: Grade,
   currentGrade: any,
   hasSpecialNeeds: boolean,
   specialNeed: string,
-  isAccepted: boolean
+  isAccepted: boolean,
+  parentRelationship?: string
 }
