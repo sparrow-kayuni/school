@@ -12,7 +12,7 @@ import { map } from 'rxjs';
   template: `
   <header class="header__search__bar d-grid py-2 pb-1 px-2">
     <div class="header__menu p-4 py-2">
-      <a routerLink="/teachers" style="font-weight: bold; font-size:1em">Default Primary School</a>
+      <a routerLink="/dashboard" style="font-weight: bold; font-size:1em">Default Primary School</a>
     </div>
     <form class="d-flex header__submenu px-2" >
       <input type="search" class="form-control" style="border-radius: 3px 0px 0px 3px;" placeholder="Find anything here" />
@@ -20,10 +20,7 @@ import { map } from 'rxjs';
     </form>
     <ul class="d-flex header__submenu px-2 py-2" >
       <li class="px-2" >
-        <a href="#" style="color: white; text-decoration: none;">Calendar</a>
-      </li>
-      <li class="px-2" >
-        <a routerLink="/teachers/profile" style="color: white; text-decoration: none;">Profile</a>
+        <a routerLink="/dashboard/profile" style="color: white; text-decoration: none;">Profile</a>
       </li>
       <li class="px-2" >
         <button class="logout__button" (click)="logoutTeacher()">Logout</button>
@@ -57,24 +54,23 @@ export class DashboardNavbarComponent {
   ngOnInit() : void {
     if(this.teacher.role === 'user') {
       this.mainLinks = [
-        {text: 'New Test/Exam', urlPath: '/teachers/new-test'},
-        {text: 'Students', urlPath: '/teachers/students'},
-        {text: 'Tests', urlPath: '/teachers/tests'},
-        {text: 'Attendance', urlPath: '/teachers/attendance'},
+        {text: 'New Test/Exam', urlPath: '/dashboard/teacher/new-test'},
+        {text: 'Students', urlPath: '/dashboard/teacher/students'},
+        {text: 'Tests', urlPath: '/dashboard/teacher/tests'},
+        {text: 'Attendance', urlPath: '/dashboard/teacher/attendance'},
       ];
       this.sideLinks = [
-        {text: 'Announcements', urlPath: '/announcements'},
+        {text: 'Announcements', urlPath: '/dashboard/announcements'},
       ];
     } else if(this.teacher.role === 'admin') {
       this.mainLinks = [
-        {text: 'Applications', urlPath: '/school/applications'},
-        {text: 'Students', urlPath: '/school/students'},
-        {text: 'Teachers', urlPath: '/school/teachers'},
-        {text: 'Payments', urlPath: '/school/payments'}
+        {text: 'New Pupils', urlPath: '/dashboard/pupil-applications'},
+        {text: 'Our Students', urlPath: '/dashboard/students'},
+        {text: 'Our Teachers', urlPath: '/dashboard/teachers'}
       ];
       this.sideLinks = [
-        {text: 'Calendar', urlPath: '/school/calendar'},
-        {text: 'Announcements', urlPath: '/announcements'},
+        {text: 'Calendar', urlPath: '/dashboard/calendar'},
+        {text: 'Announcements', urlPath: '/dashboard/announcements'},
       ]
     }
 

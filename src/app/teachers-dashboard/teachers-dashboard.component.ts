@@ -7,7 +7,7 @@ import { Teacher } from '../teacher';
   imports: [],
   template: `
   <div class="d-grid">
-    <div>Teachers dashboard</div>
+    <div></div>
   </div>
   
   `,
