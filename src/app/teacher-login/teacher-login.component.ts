@@ -151,7 +151,7 @@ export class TeacherLoginComponent implements OnInit, OnDestroy {
               if (res) {
                 sessionStorage.setItem('sessionKey', res.sessionKey);
                 sessionStorage.setItem('message', 'Successfully logged in!');
-                this.router.navigate(['/teachers']);
+                this.router.navigate(['/dashboard']);
               }
             })
           ).subscribe();

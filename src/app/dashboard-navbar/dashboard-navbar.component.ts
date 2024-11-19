@@ -69,7 +69,6 @@ export class DashboardNavbarComponent {
         {text: 'Our Teachers', urlPath: '/dashboard/teachers'}
       ];
       this.sideLinks = [
-        {text: 'Calendar', urlPath: '/dashboard/calendar'},
         {text: 'Announcements', urlPath: '/dashboard/announcements'},
       ]
     }
